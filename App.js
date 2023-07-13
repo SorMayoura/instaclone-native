@@ -5,6 +5,7 @@ import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import { NavigationContainer } from '@react-navigation/native';
 import LoggedOutNav from './navigators/LoggedOutNav';
+import { Appearance, useColorScheme  } from 'react-native';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -33,10 +34,13 @@ export default function App() {
       />
     )
   }
+
+  console.log(Appearance.getColorScheme());
   return (
-    <NavigationContainer>
-      <LoggedOutNav />
-    </NavigationContainer>
+    // <Appea
+      <NavigationContainer>
+        <LoggedOutNav />
+      </NavigationContainer>
   );
 }
 
