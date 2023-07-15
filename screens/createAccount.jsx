@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { AuthLayout } from "../components/auth/AuthLayout";
 import { AuthButton } from "../components/auth/AuthButton";
 import { TextInput } from "../components/auth/AuthShared";
 
 export default function CreateAccount() {
-  const { register, handleSubmit, setValue } = useEffect();
+  const { register, handleSubmit, setValue } = useForm();
 
   //   const { LastNameRef, userNameRef, emailRef, passwordRef } = useRef(); // declare like this does not work
   const LastNameRef = useRef();
@@ -17,8 +18,13 @@ export default function CreateAccount() {
   };
 
   useEffect(() => {
-    register("fir")
-  })
+    register("firstName");
+    register("LastName");
+    register("userName");
+    register("email");
+    register("password");
+
+  }, [register]);
 
   const onNext = (nextOne) => {
     nextOne?.current?.focus();
@@ -35,10 +41,7 @@ export default function CreateAccount() {
         returnKeyType="next"
         onSubmitEditing={() => onNext(LastNameRef)}
         placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
-
-
-        ///
-        onChange
+        onChangeText={(text) => setValue("firstName", text)}
       />
 
       <TextInput
@@ -47,14 +50,17 @@ export default function CreateAccount() {
         returnKeyType="next"
         onSubmitEditing={() => onNext(userNameRef)}
         placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("LastName", text)}
       />
 
       <TextInput
         ref={userNameRef}
         placeholder="Username"
         returnKeyType="next"
+        autoCapitalize="none"
         onSubmitEditing={() => onNext(emailRef)}
         placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("userName", text)}
       />
 
       <TextInput
@@ -62,8 +68,10 @@ export default function CreateAccount() {
         placeholder="Email"
         keyboardType="email-address"
         returnKeyType="next"
+        autoCapitalize="none"
         onSubmitEditing={() => onNext(passwordRef)}
         placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("email", text)}
       />
 
       <TextInput
@@ -72,14 +80,16 @@ export default function CreateAccount() {
         secureTextEntry
         returnKeyType="done"
         placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
-        lastOne={true}
-        onSubmitEditing={() => onDone()}
+        lastOne={true}        
+        autoCapitalize={'none'} // to avoid autocapitalizing the first letter of each word
+        onChangeText={(text) => setValue("password", text)}
+        onSubmitEditing={handleSubmit(onValid)}
       />
 
       <AuthButton
         text={"Create Account"}
-        disabled={true}
-        onPress={() => null}
+        disabled={false}
+        onPress={handleSubmit(onValid)}
       />
     </AuthLayout>
   );
