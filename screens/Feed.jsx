@@ -1,6 +1,6 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
-export default function Feed() {
+export default function Feed({ navigation }) {
   return (
     <View
       style={{
@@ -10,13 +10,9 @@ export default function Feed() {
         justifyContent: "center",
       }}
     >
-      <Text
-        style={{
-          color: "white",
-        }}
-      >
-        Hello
-      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Photo")}>
+        <Text style={{color:"white"}}>Photo</Text>
+      </TouchableOpacity>
     </View>
   );
 }
