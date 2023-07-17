@@ -3,9 +3,29 @@ import { useForm } from "react-hook-form";
 import { AuthLayout } from "../components/auth/AuthLayout";
 import { AuthButton } from "../components/auth/AuthButton";
 import { TextInput } from "../components/auth/AuthShared";
+import { gql, useMutation } from "@apollo/client";
 
-export default function CreateAccount() {
-  const { register, handleSubmit, setValue } = useForm();
+const CREATE_ACCOUNT_MUTATION = gql`
+    mutation createProfile(     
+        $firstName: String!,
+        $lastName: String,
+        $email: String!
+        $userName: String!, 
+        $password: String!) {
+          createProfile(
+            userName: $userName, 
+            firstName: $firstName, 
+            password: $password, 
+            email: $email, 
+            LastName: $lastName) {
+              status
+              message
+            }
+        }
+  `;
+
+export default function CreateAccount({navigation}) {
+  const { register, handleSubmit, setValue, getValues } = useForm();
 
   //   const { LastNameRef, userNameRef, emailRef, passwordRef } = useRef(); // declare like this does not work
   const LastNameRef = useRef();
@@ -13,8 +33,35 @@ export default function CreateAccount() {
   const emailRef = useRef();
   const passwordRef = useRef();
 
+  const onCompleted = (data) => {
+    const {
+      createProfile : {
+        status
+      }
+    } = data;
+
+    const { userName, password } = getValues();
+
+    if (status) {
+      navigation.navigate('LogIn', {
+        userName,
+        password
+      });
+    }
+  };
+
+  const [createProfileMutation, {loading}] = useMutation(CREATE_ACCOUNT_MUTATION, {
+    onCompleted
+  });
+
   const onValid = (data) => {
-    console.log(data);
+    if (!loading) {
+      createProfileMutation({
+        variables: {
+          ...data
+        }
+      })
+    }
   };
 
   useEffect(() => {
