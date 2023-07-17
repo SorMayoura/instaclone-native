@@ -15,7 +15,7 @@ export default function Profile() {
           color: "white",
         }}
       >
-        Profile
+         Someone's Profile
       </Text>
     </View>
   );
