@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 
-export default function Feed() {
+export default function Search() {
   return (
     <View
       style={{
@@ -15,7 +15,7 @@ export default function Feed() {
           color: "white",
         }}
       >
-        Hello
+        Search
       </Text>
     </View>
   );

@@ -6,32 +6,40 @@ import * as Font from "expo-font";
 import { NavigationContainer } from '@react-navigation/native';
 import LoggedOutNav from './navigators/LoggedOutNav';
 import { ApolloProvider, useReactiveVar } from '@apollo/client';
-import { client, isLoggedInVar } from './apollo';
+import { client, isLoggedInVar, tokenVar } from './apollo';
 import LoggedInNav from './navigators/LoggedInNav';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const onFinish = () => setLoading(false);
   const isLoggedIn = useReactiveVar(isLoggedInVar);
-  const preLoading = () => {
+  const preloadAsset = () => {
     const fontsToLoad = [Ionicons.font];
     const fontPromise  = fontsToLoad.map((font) => Font.loadAsync(font));    
 
-    const imageToLoad = [
-      "./assets/logo.png",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/840px-Instagram_logo.svg.png"
-    ];
+    const imageToLoad = ["./assets/logo.png"];
     const imagePromise = imageToLoad.map((image) => Asset.loadAsync(image));
     return Promise.all([
       ...fontPromise, 
       ...imagePromise
     ]);
+  };
+
+  const preload = async () => {
+    const token = await AsyncStorage.getItem("token");
+
+    if (token) {
+      isLoggedInVar(true);
+      tokenVar(token)
+    }
+    return preloadAsset();
   }
 
   if (loading) {
     return (
       <AppLoading
-        startAsync={preLoading}
+        startAsync={preload}
         onError={console.warn}
         onFinish={onFinish}
       />

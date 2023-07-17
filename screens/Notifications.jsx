@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 
-export default function Feed() {
+export default function Notifications() {
   return (
     <View
       style={{
@@ -15,7 +15,7 @@ export default function Feed() {
           color: "white",
         }}
       >
-        Hello
+        Notifications
       </Text>
     </View>
   );
