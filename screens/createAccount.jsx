@@ -18,20 +18,26 @@ export default function CreateAccount() {
   };
 
   useEffect(() => {
-    register("firstName");
-    register("LastName");
-    register("userName");
-    register("email");
-    register("password");
+    register("firstName",
+      {required: true}
+    );
+    register("LastName",
+      {required: true}
+    );
+    register("userName",
+      {required: true}
+    );
+    register("email",
+      {required: true}
+    );
+    register("password",
+      {required: true}
+    );
 
   }, [register]);
 
   const onNext = (nextOne) => {
     nextOne?.current?.focus();
-  };
-
-  const onDone = () => {
-    alert("done");
   };
 
   return (

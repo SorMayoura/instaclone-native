@@ -1,50 +1,92 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
 import { AuthLayout } from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AuthShared";
 import { AuthButton } from "../components/auth/AuthButton";
 import { useForm } from "react-hook-form";
+import { gql, useMutation } from "@apollo/client";
+import { isLoggedInVar } from "../apollo";
 
-export default function LogIn({navigation}) {
-    const { setValue, handleSubmit, register } = useForm();
-    const passwordRef = useRef();
-
-    function onNext(nextOne) {
-        nextOne?.current?.focus();
+const LOGIN_MUTATION = gql`
+  mutation login($userName: String!, $password: String!) {
+    login(userName: $userName, password: $password) {
+      status
+      message
+      token
     }
+  }
+`;
 
-    function onValid(data) {
-        console.log('valid', data);
+export default function LogIn({ navigation }) {
+  const { setValue, handleSubmit, register, watch } = useForm();
+  const passwordRef = useRef();
+
+  function onNext(nextOne) {
+    nextOne?.current?.focus();
+  }
+
+  const onCompleted = (data) => {
+    const {
+      login: { status, message, token },
+    } = data;
+
+    if (status) {
+      isLoggedInVar(true);
     }
+  };
 
-    useEffect(() => {
-        register("userName");
-        register("password");
-    }, [register]);
+  const [logInMutation, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted,
+  });
 
-    return (
-        <AuthLayout>
-            <TextInput
-                placeholder="Username"
-                returnKeyType="next"
-                autoCapitalize="none"
-                placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
-                onSubmitEditing={onNext(passwordRef)}                
-                onChangeText={(text) => {setValue("userName", text)}}/>
-            <TextInput 
-                ref={passwordRef}
-                placeholder="Password"
-                secureTextEntry
-                returnKeyType="done"
-                lastOne={true}
-                placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
-                onSubmitEditing={handleSubmit(onValid)}
-                onChangeText={(text) => {setValue("password", text)}} />
-            <AuthButton 
-                text={"Log In"}
-                disabled={false}
-                onPress={handleSubmit(onValid)} 
-            />
-        </AuthLayout>
-    )
+  function onValid(data) {
+    if (!loading) {
+      logInMutation({
+        variables: {
+          ...data,
+        },
+      });
+    }
+  }
+
+  useEffect(() => {
+    register("userName", {
+      required: true,
+    });
+    register("password", {
+      required: true,
+    });
+  }, [register]);
+
+  return (
+    <AuthLayout>
+      <TextInput
+        placeholder="Username"
+        returnKeyType="next"
+        autoCapitalize="none"
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onSubmitEditing={() => onNext(passwordRef)}
+        onChangeText={(text) => {
+          setValue("userName", text);
+        }}
+      />
+      <TextInput
+        ref={passwordRef}
+        placeholder="Password"
+        secureTextEntry
+        returnKeyType="done"
+        lastOne={true}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onSubmitEditing={handleSubmit(onValid)}
+        onChangeText={(text) => {
+          setValue("password", text);
+        }}
+      />
+      <AuthButton
+        text={"Log In"}
+        loading={loading}
+        disabled={!watch("userName") || !watch("password")}
+        onPress={handleSubmit(onValid)}
+      />
+    </AuthLayout>
+  );
 }
