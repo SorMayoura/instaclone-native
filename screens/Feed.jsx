@@ -6,8 +6,8 @@ import { Photo } from "../components/Photo";
 import { useState } from "react";
 
 const FEED_QUERY = gql`
-  query seeFeed {
-    seeFeed {
+  query seeFeed ($offset: Int!) {
+    seeFeed(offset: $offset) {
       data {
         ...PhotoFragment
         user_ref {
@@ -30,7 +30,11 @@ const FEED_QUERY = gql`
 `;
 
 export default function Feed({ navigation }) {
-  const { data, loading, refetch } = useQuery(FEED_QUERY);
+  const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
+    variables:{
+      offset: 0,
+    }
+  });
 
   const renderPhoto = ({ item: photo }) => {
     return <Photo {...photo} />;
@@ -46,6 +50,12 @@ export default function Feed({ navigation }) {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
+        onEndReachedThreshold={0}
+        onEndReached={() => fetchMore({
+          variables:{
+            offset: data?.seeFeed?.data.length,
+          }
+        })}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
