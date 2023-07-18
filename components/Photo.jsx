@@ -61,7 +61,7 @@ export function Photo({ id, user_ref, caption, file, isLiked, likes }) {
       setImageHeight(height / 3);
     });
   }, [file]);
-  console.log(id, user_ref, caption, file, isLiked, likes);
+//   console.log(id, user_ref, caption, file, isLiked, likes);
 
   return (
     <Container>
