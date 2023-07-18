@@ -39,7 +39,8 @@ export default function Feed({ navigation }) {
 
   return (
     <ScreenLayout loading={loading}>
-      <FlatList
+      <FlatList    
+        // refreshing={refreshing}  
         style={{width: "100%"}}
         showsVerticalScrollIndicator={false}
         data={data?.seeFeed?.data}
