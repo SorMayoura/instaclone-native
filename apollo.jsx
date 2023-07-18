@@ -39,9 +39,45 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const conf = {
+  typePolicies: {
+    Query: {
+      fields: {
+        seeFeed: {
+          // Don't cache separate results based on
+          // any of this field's arguments.
+          keyArgs: false,
+
+          // Concatenate the incoming list items with
+          // the existing list items.
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
+      },
+    },
+  },
+};
+
 export const client = new ApolloClient({
   // uri: "http://localhost:8000/graphQL",
   // uri: "https://4a22-59-31-230-125.ngrok-free.app/graphQL",
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Publication: {
+        merge: true,
+      },
+      Post: {
+        merge: true,
+      },
+      Query: {
+        fields: {
+          seeFeed: {
+            data: offsetLimitPagination(),
+          },
+        },
+      },
+    },
+  }),
 });

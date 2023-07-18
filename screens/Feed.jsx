@@ -30,10 +30,12 @@ const FEED_QUERY = gql`
 `;
 
 export default function Feed({ navigation }) {
+  // const [offset, setOffset] = useState(0);
   const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
     variables:{
-      offset: 0,
-    }
+      offset:0,
+    },
+    //notifyOnNetworkStatusChange:true
   });
 
   const renderPhoto = ({ item: photo }) => {
@@ -46,16 +48,20 @@ export default function Feed({ navigation }) {
     setRefreshing(false);
   };
 
+   console.log(data?.seeFeed?.data);
   const [refreshing, setRefreshing] = useState(false);
   return (
+    
     <ScreenLayout loading={loading}>
       <FlatList
         onEndReachedThreshold={0}
-        onEndReached={() => fetchMore({
-          variables:{
-            offset: data?.seeFeed?.data.length,
-          }
-        })}
+        onEndReached={() =>
+          fetchMore({
+            variables: {
+              offset: data?.seeFeed?.data.length,
+            },
+          })
+        }
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }

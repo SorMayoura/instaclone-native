@@ -119,7 +119,7 @@ Photo.propTypes = {
   }),
   caption: PropTypes.string,
   file: PropTypes.string.isRequired,
-  isLiked: PropTypes.string.isRequired,
-  likes: PropTypes.string.isRequired,
-  commentNumber: PropTypes.number.isRequired,
+  isLiked: PropTypes.bool.isRequired,
+  likes: PropTypes.number.isRequired,
+  commentNumber: PropTypes.number,
 };
