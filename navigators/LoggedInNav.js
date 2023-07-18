@@ -1,13 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Feed from "../screens/Feed";
-import Search from '../screens/Search';
-import Notifications from '../screens/Notifications';
-import Profile from '../screens/Profile';
 import { View } from 'react-native';
 import TabIcon from '../components/nav/TabIcon';
-import StackNavFactory from '../components/nav/StackNavFactory';
-import Me from '../screens/Me';
+import SharedStackNav from './SharedStackNav';
 
 const Tabs = createBottomTabNavigator();
 
@@ -32,7 +27,7 @@ export default function LoggedInNav() {
                     )
 
                 }}>
-                {() => <StackNavFactory screenName="Feed" />}
+                {() => <SharedStackNav screenName="Feed" />}
             </Tabs.Screen>
 
             <Tabs.Screen
@@ -42,7 +37,7 @@ export default function LoggedInNav() {
                         <TabIcon focused={focused} color={color} iconName={"search"} />
                     )
                 }}>
-                    { () => <StackNavFactory screenName="Search" /> }
+                    { () => <SharedStackNav screenName="Search" /> }
                 </Tabs.Screen>
 
             <Tabs.Screen
@@ -60,7 +55,7 @@ export default function LoggedInNav() {
                         <TabIcon focused={focused} color={color} iconName={"heart"} />
                     )
                 }}>
-                    { () => <StackNavFactory screenName="Notifications" /> }
+                    { () => <SharedStackNav screenName="Notifications" /> }
                 </Tabs.Screen>
 
             <Tabs.Screen
@@ -70,7 +65,7 @@ export default function LoggedInNav() {
                         <TabIcon focused={focused} color={color} iconName={"person"} />
                     )
                 }}>
-                    {() => <StackNavFactory screenName="Me" />}
+                    {() => <SharedStackNav screenName="Me" />}
                 </Tabs.Screen>
         </Tabs.Navigator>
     )
