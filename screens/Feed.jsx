@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 import { ScreenLayout } from "../components/ScreenLayout";
 import { FlatList } from "react-native-gesture-handler";
+import { Photo } from "../components/Photo";
 
 const FEED_QUERY = gql`
   query seeFeed {
@@ -30,19 +31,17 @@ const FEED_QUERY = gql`
 
 export default function Feed({ navigation }) {
   const { data, loading } = useQuery(FEED_QUERY);
-  console.log("Data---------", data.seeFeed);
+
+  console.log(data);
   const renderPhoto = ({ item: photo }) => {
-    console.log("Photo---------", photo);
-    return (
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: "white" }}> {photo.caption} </Text>
-      </View>
-    );
+    return <Photo {...photo} />
   };
 
   return (
     <ScreenLayout loading={loading}>
       <FlatList
+        style={{width: "100%"}}
+        showsVerticalScrollIndicator={false}
         data={data?.seeFeed?.data}
         keyExtractor={(photo) => "" + photo.id}
         renderItem={renderPhoto}
