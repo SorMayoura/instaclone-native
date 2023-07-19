@@ -27,7 +27,7 @@ export default async function logUserOut() {
 }
 
 const httpLink = createHttpLink({
-  uri: "https://4a22-59-31-230-125.ngrok-free.app/graphQL",
+  uri: "https://3f03-59-31-230-125.ngrok-free.app/graphQL",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -43,16 +43,29 @@ const conf = {
   typePolicies: {
     Query: {
       fields: {
-        seeFeed: {
-          // Don't cache separate results based on
-          // any of this field's arguments.
-          keyArgs: false,
+        seeFeed:  offsetLimitPagination(),
+        // {
+        //   keyArgs: offsetLimitPagination()
+          //  false,
+          // ...offsetLimitPagination(),
+          // data: {          
+          //   merge(existing = [], incoming = []) {
+          //     return [...existing, ...incoming];
+          //   },
+          // }
+          // data: offsetLimitPagination()
+        // },
+      },
+    },
+  },
+};
 
-          // Concatenate the incoming list items with
-          // the existing list items.
-          merge(existing = [], incoming) {
-            return [...existing, ...incoming];
-          },
+const more = {
+  typePolicies: {
+    Query: {
+      fields: {
+        seeFeed: {
+          data: offsetLimitPagination(),
         },
       },
     },
@@ -61,23 +74,6 @@ const conf = {
 
 export const client = new ApolloClient({
   // uri: "http://localhost:8000/graphQL",
-  // uri: "https://4a22-59-31-230-125.ngrok-free.app/graphQL",
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Publication: {
-        merge: true,
-      },
-      Post: {
-        merge: true,
-      },
-      Query: {
-        fields: {
-          seeFeed: {
-            data: offsetLimitPagination(),
-          },
-        },
-      },
-    },
-  }),
+  cache: new InMemoryCache(conf),
 });

@@ -1,5 +1,5 @@
-import { ActivityIndicator } from "react-native";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import React from "react";
 
 export const ScreenLayout = ({ loading, children }) => {
   return (
