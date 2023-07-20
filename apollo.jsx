@@ -27,7 +27,7 @@ export default async function logUserOut() {
 }
 
 const httpLink = createHttpLink({
-  uri: "https://3f03-59-31-230-125.ngrok-free.app/graphQL",
+  uri: "https://88c4-59-31-230-125.ngrok-free.app/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -39,41 +39,18 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const conf = {
+export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
         seeFeed:  offsetLimitPagination(),
-        // {
-        //   keyArgs: offsetLimitPagination()
-          //  false,
-          // ...offsetLimitPagination(),
-          // data: {          
-          //   merge(existing = [], incoming = []) {
-          //     return [...existing, ...incoming];
-          //   },
-          // }
-          // data: offsetLimitPagination()
-        // },
       },
     },
   },
-};
-
-const more = {
-  typePolicies: {
-    Query: {
-      fields: {
-        seeFeed: {
-          data: offsetLimitPagination(),
-        },
-      },
-    },
-  },
-};
+});
 
 export const client = new ApolloClient({
   // uri: "http://localhost:8000/graphQL",
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(conf),
+  cache
 });
