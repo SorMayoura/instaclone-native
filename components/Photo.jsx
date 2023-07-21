@@ -138,7 +138,11 @@ export function Photo({ id, user_ref, caption, file, isLiked, likes }) {
           </Action>
         </Actions>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Likes")}>
+        <TouchableOpacity 
+          onPress={() => navigation.navigate("Likes", {
+            photoId: id
+          })}
+        >
             <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         </TouchableOpacity>
         

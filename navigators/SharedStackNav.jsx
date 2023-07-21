@@ -8,6 +8,7 @@ import Photo from "../screens/Photo";
 import { Image } from "react-native";
 import Comments from "../screens/Comments";
 import Likes from "../screens/Likes";
+import React, { useEffect, useState } from "react";
 
 const Stack = createStackNavigator();
 
